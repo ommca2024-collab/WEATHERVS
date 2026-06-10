@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>WeatherVS India — India's Smart Weather Hub</title>
+  <meta name="description" content="WeatherVS India — India's Smart Weather Hub. Live weather, 5-day forecasts, smart alerts, and UV index for every Indian city." />
+
+  <!-- Favicon SVG inline as data URI -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23101828'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-size='36' font-family='Arial Black,sans-serif' fill='white'%3EW%3C/text%3E%3Ccircle cx='46' cy='18' r='8' fill='%23F97316'/%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- SPLASH SCREEN -->
+  <div id="splashScreen" class="splash-screen" aria-hidden="true">
+    <div class="splash-inner">
+      <div class="splash-logo">W</div>
+      <h1 class="splash-title">WeatherVS India</h1>
+      <p class="splash-sub">India's Smart Weather Hub</p>
+      <div class="splash-bar"><div class="splash-progress"></div></div>
+    </div>
+    <!-- floating clouds in splash -->
+    <div class="splash-cloud splash-cloud-1"></div>
+    <div class="splash-cloud splash-cloud-2"></div>
+    <div class="splash-cloud splash-cloud-3"></div>
+  </div>
+
+  <!-- MAIN APP -->
+  <div class="app-shell" id="appShell">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">W</div>
+        <div class="brand-text">
+          <h1>WeatherVS India</h1>
+          <p>India's Smart Weather Hub</p>
+        </div>
+      </div>
+
+      <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle theme">
+        <span id="themeIcon" class="toggle-icon">🌙</span>
+        <span id="themeText">Dark Mode</span>
+      </button>
+    </header>
+
+    <!-- HERO / SEARCH PAGE -->
+    <main class="dashboard">
+
+      <!-- HERO CARD -->
+      <section class="hero-card">
+        <div class="hero-clouds" aria-hidden="true">
+          <div class="cloud cloud-1"></div>
+          <div class="cloud cloud-2"></div>
+          <div class="cloud cloud-3"></div>
+        </div>
+
+        <div class="hero-content">
+          <span class="eyebrow">Live Weather For Indian Cities</span>
+          <h2 class="hero-title">Search Any City<br/>In India</h2>
+          <p class="hero-subtitle">
+            Current conditions, 5-day forecast, smart alerts, and UV index — all in one dashboard.
+          </p>
+        </div>
+
+        <div class="search-wrap">
+          <div class="search-bar">
+            <svg class="search-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <input
+              id="cityInput"
+              type="text"
+              placeholder="Search Indian city — Mumbai, Pune, Delhi..."
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <button id="searchBtn" type="button">Search</button>
+          </div>
+
+          <!-- QUICK CITIES -->
+          <div class="quick-cities" role="group" aria-label="Quick city selection">
+            <button class="city-chip" data-city="Mumbai">Mumbai</button>
+            <button class="city-chip" data-city="Delhi">Delhi</button>
+            <button class="city-chip" data-city="Pune">Pune</button>
+            <button class="city-chip" data-city="Nagpur">Nagpur</button>
+            <button class="city-chip" data-city="Bengaluru">Bengaluru</button>
+            <button class="city-chip" data-city="Hyderabad">Hyderabad</button>
+            <button class="city-chip" data-city="Chennai">Chennai</button>
+            <button class="city-chip" data-city="Kolkata">Kolkata</button>
+            <button class="city-chip" data-city="Jaipur">Jaipur</button>
+            <button class="city-chip" data-city="Ahmedabad">Ahmedabad</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- DASHBOARD GRID -->
+      <div class="grid-layout">
+
+        <!-- LEFT COLUMN -->
+        <div class="left-col">
+
+          <!-- ALERTS CARD -->
+          <section class="card alerts-card">
+            <div class="section-head">
+              <h3>Today's Alerts</h3>
+              <span class="section-tag">India Weather</span>
+            </div>
+            <div id="alertsList" class="alerts-list">
+              <p class="muted placeholder-text">Search a city to generate weather alerts.</p>
+            </div>
+          </section>
+
+          <!-- RECENT SEARCHES CARD -->
+          <section class="card recent-card">
+            <div class="section-head">
+              <h3>Recent Searches</h3>
+              <span class="section-tag">Max 10</span>
+            </div>
+            <div id="recentSearches" class="recent-searches">
+              <p class="muted placeholder-text">Your recent searches will appear here.</p>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="right-col">
+
+          <!-- CURRENT WEATHER CARD -->
+          <section class="card current-weather-card">
+            <div class="section-head">
+              <h3>Current Weather</h3>
+              <span id="weatherStatus" class="section-tag status-tag">Ready</span>
+            </div>
+
+            <!-- LOADING -->
+            <div id="loadingState" class="loading-state hidden">
+              <div class="spinner"></div>
+              <p>Fetching weather data...</p>
+            </div>
+
+            <!-- WEATHER CONTENT -->
+            <div id="weatherContent" class="weather-content">
+              <div class="city-row">
+                <div>
+                  <h2 id="cityName">Welcome</h2>
+                  <p id="cityRegion" class="muted">Search an Indian city to begin</p>
+                </div>
+                <div class="weather-icon-wrap">
+                  <img id="weatherIcon" class="weather-icon hidden" src="" alt="Weather condition icon" />
+                </div>
+              </div>
+
+              <div class="temperature-block">
+                <div id="temperature" class="temperature">--°C</div>
+                <p id="weatherDescription">No data loaded yet</p>
+              </div>
+
+              <!-- METRICS GRID -->
+              <div class="weather-meta">
+                <div class="meta-item">
+                  <span class="meta-label">Feels Like</span>
+                  <strong id="feelsLike" class="meta-value">--°C</strong>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">Humidity</span>
+                  <strong id="humidity" class="meta-value">--%</strong>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">Wind Speed</span>
+                  <strong id="windSpeed" class="meta-value">-- km/h</strong>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">Pressure</span>
+                  <strong id="pressure" class="meta-value">-- hPa</strong>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">Visibility</span>
+                  <strong id="visibility" class="meta-value">-- km</strong>
+                </div>
+                <div class="meta-item uv-item">
+                  <span class="meta-label">UV Index</span>
+                  <strong id="uvIndex" class="meta-value uv-value">--</strong>
+                  <span id="uvLabel" class="uv-label"></span>
+                </div>
+              </div>
+
+              <!-- SUN TIMES -->
+              <div class="sun-times">
+                <div class="sun-box">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="sun-icon"><circle cx="12" cy="12" r="5"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                  <span>Sunrise</span>
+                  <strong id="sunrise">--:--</strong>
+                </div>
+                <div class="sun-box">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="sun-icon"><path d="M17 18a5 5 0 0 0-10 0"/><path d="M12 9v2M4.22 10.22l1.42 1.42M1 18h2M21 18h2M18.36 11.64l1.42-1.42M23 22H1M12 2v2"/></svg>
+                  <span>Sunset</span>
+                  <strong id="sunset">--:--</strong>
+                </div>
+                <div class="sun-box">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="sun-icon"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <span>Last Updated</span>
+                  <strong id="lastUpdated">--</strong>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- FORECAST CARD -->
+          <section class="card forecast-card">
+            <div class="section-head">
+              <h3>5-Day Forecast</h3>
+              <span class="section-tag">Next 5 Days</span>
+            </div>
+            <div id="forecastContainer" class="forecast-grid">
+              <p class="muted placeholder-text">Forecast will appear after search.</p>
+            </div>
+          </section>
+
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <footer class="app-footer">
+        <span>Made with</span>
+        <svg class="heart-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5A5.5 5.5 0 0 1 7.5 3c1.74 0 3.41.81 4.5 2.09A5.99 5.99 0 0 1 16.5 3 5.5 5.5 0 0 1 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        <span>by <strong>Om Kute</strong></span>
+      </footer>
+
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
